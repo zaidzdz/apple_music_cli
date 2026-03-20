@@ -7,17 +7,34 @@
 #include "apple-music-api.h"
 using namespace ftxui;
 
-SongInfo info;  // shared state
+SongInfo info;
+std::mutex info_mutex;  // ← ADD THIS
 bool running = true;
+SongInfo getSafeInfo() {
+    std::lock_guard<std::mutex> lock(info_mutex);
+    return info;
+}
+inline std::string floatToTime(float seconds) {
+    int mins = (int)(seconds / 60);
+    int secs = (int)(seconds - mins * 60);
 
-
+    char buffer[6];
+    std::snprintf(buffer, sizeof(buffer), "%d:%02d", mins, secs);
+    return std::string(buffer);
+}
 void threadsdfs() {
     while (running) {
-        info = getMusicAppSong();
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        std::cout << "s";
+        SongInfo temp = getMusicAppSong();
+
+        {
+            std::lock_guard<std::mutex> lock(info_mutex);
+            info = temp;  // Safe write
+        }
+
+
     }
 }
+
 int main() {
 
     ScreenInteractive screen = ScreenInteractive::Fullscreen();
@@ -42,30 +59,37 @@ int main() {
             text(repeatStr("░", empty))  | color(Color::GrayDark),
         });
     };
-    auto doc = window(text("APPLE MUSIC CLI") | bold | color(Color::Red),{
+
+
+
+
+
+    auto renderer = Renderer([&] {
+        SongInfo current = getSafeInfo();
+        auto doc = window(text("APPLE MUSIC CLI") | bold | color(Color::Red),{
 
         vbox({
             hbox({
                 text("Current track:  ") | color(Color::Red),
 
-                text("Neon Gravestones")
+                text(current.title)
             }),
             hbox({
                 text("Current album:  ")  | color(Color::Red),
 
-                text("Trench")
+                text(current.album)
             }),
             hbox({
                 text("Current artist: ") | color(Color::Red),
 
-                text(info.artist)
+                text(current.artist)
             }),
 
             hbox({
                 text("Progress:  ") | color(Color::Red),
-                text("0:23  ") | bold | color(Color::GrayLight),
-                customGauge(info.position,50),
-                text("  3:33") | bold | color(Color::GrayLight),
+                text(floatToTime(current.position)+"  ") | bold | color(Color::GrayLight),
+                customGauge(current.position/current.duration,50),
+                text("  "+floatToTime(current.duration)) | bold | color(Color::GrayLight),
 
             }),
             hbox({
@@ -88,10 +112,15 @@ int main() {
 
 
 
-    auto renderer = Renderer([&] { return doc; });
+        return doc;
+
+
+
+    });
 
     auto component = CatchEvent(renderer, [&](Event event) {
         if (event == Event::Character('q')) {
+            //running = false;
             screen.ExitLoopClosure();
             return true;
         }

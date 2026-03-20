@@ -30,13 +30,14 @@ struct SongInfo {
     std::string title;
     std::string artist;
     std::string album;
-    double duration;    // seconds
-    double position;    // current position in seconds
+    float duration;    // seconds
+    float position;    // current position in seconds
     bool isPlaying;
 };
 inline bool isValidResult(const std::string& s) {
     return !s.empty() && s.find("error") == std::string::npos;
 }
+
 SongInfo getMusicAppSong() {
 std::cout << "s";
     SongInfo info;
