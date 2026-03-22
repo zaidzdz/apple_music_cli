@@ -9,8 +9,10 @@ FetchContent_Declare(ftxui
 )
 FetchContent_MakeAvailable(ftxui)
 
-add_executable(apple_music_cli main.cpp
-        apple-music-api.h)
+add_executable(apple_music_cli
+        apple-music-api.h
+        main.cpp
+        apple_music_menu.h)
 
 # Name must match your executable above
 target_link_libraries(apple_music_cli

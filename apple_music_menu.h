@@ -1,0 +1,8 @@
+//
+// Created by Zaid Zamani on 3/22/26.
+//
+
+#ifndef APPLE_MUSIC_CLI_APPLE_MUSIC_MENU_H
+#define APPLE_MUSIC_CLI_APPLE_MUSIC_MENU_H
+
+#endif //APPLE_MUSIC_CLI_APPLE_MUSIC_MENU_H
