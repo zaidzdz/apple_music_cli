@@ -7,7 +7,6 @@
 #include <thread>
 #include <mutex>
 #include "apple-music-api.h"
-
 using namespace ftxui;
 
 SongInfo info;
