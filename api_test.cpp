@@ -1,11 +1,11 @@
-#include <iostream>
-#include <ostream>
-#include <thread>
-
-#include "apple-music-api.h"
 //
 // Created by Zaid Zamani on 3/20/26.
 //
+#include <iostream>
+#include <ostream>
+#include <thread>
+#include "apple-music-api.h"
+
 bool running = true;
 int main() {
 while (running) {
