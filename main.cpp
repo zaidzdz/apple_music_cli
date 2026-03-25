@@ -1,3 +1,6 @@
+//
+// Created by Zaid Zamani on 3/20/26.
+//
 #include <iostream>
 #include <ftxui/screen/screen.hpp>
 #include <ftxui/component/component.hpp>
